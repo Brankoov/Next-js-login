@@ -10,27 +10,29 @@ export default function Page() {
   const [success, setSuccess] = useState<boolean>(false)
 
   const login = async () => {
-    setError(null)
-    setSuccess(false)
+  setError(null)
+  setSuccess(false)
 
     try {
-      // TODO - Change to apiFetch() utility
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
-        credentials: "include", // Include Cookies
+        credentials: "include", // <-- viktigt, tar emot JWT-cookie
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       })
 
       if (!res.ok) {
-        const errorBody = await res.text() // try to read message
-        setError(errorBody || "Login failed.")
+        const body = await res.json().catch(() => null)
+        setError(body?.error || "Login failed")
         return
       }
 
       setSuccess(true)
+      // redirect typ dashboard
+      window.location.href = "/dashboard"
+
     } catch (err) {
-      setError("Network error: backend unreachable")
+      setError("Network error")
     }
   }
 
