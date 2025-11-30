@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("")
@@ -22,15 +23,9 @@ export default function RegisterPage() {
       })
 
       if (!res.ok) {
-        // Försök läsa JSON, annars fallback
         let body: any = null
-        try {
-          body = await res.json()
-        } catch {
-          // ignore
-        }
-
-        setError(body?.error || "Registration failed")
+        try { body = await res.json() } catch {}
+        setError(body?.error || "Registration failed (Check password requirements)")
         return
       }
 
@@ -41,36 +36,65 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-sm mx-auto p-6">
-      <h1 className="text-xl font-bold">Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm border border-slate-200">
+        <h1 className="text-3xl font-extrabold mb-6 text-slate-800 text-center">Create Account</h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 rounded"
-        />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full border border-slate-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              placeholder="Choose a username"
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
-        />
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-slate-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              placeholder="Strong password (Ex: Admin123!)"
+            />
+            <p className="text-xs text-slate-400 mt-1 ml-1">Must contain Upper, Lower, Number & Symbol</p>
+          </div>
 
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white py-2 rounded"
-        >
-          Register
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          >
+            Register
+          </button>
+        </form>
 
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">Account created!</p>}
+        <div className="mt-4">
+            {error && (
+                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-200 text-center font-medium">
+                    ⚠️ {error}
+                </div>
+            )}
+            
+            {success && (
+                <div className="p-3 bg-green-50 text-green-600 text-sm rounded-lg border border-green-200 text-center font-medium">
+                    ✅ Account created!<br/>
+                    <Link href="/login" className="underline font-bold mt-2 inline-block">Go to Login</Link>
+                </div>
+            )}
+        </div>
+        
+        <div className="text-center mt-4 text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 font-bold hover:underline">
+              Log in
+            </Link>
+        </div>
+
+      </div>
     </div>
   )
 }

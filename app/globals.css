@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+input {
+  color: black !important; 
+}
 
 :root {
   --background: #ffffff;

@@ -1,21 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link" // Vi använder Link för snabbare navigering
 
-export default function Page() {
+export default function LoginPage() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<boolean>(false)
 
   const login = async () => {
-  setError(null)
-  setSuccess(false)
+    setError(null)
+    setSuccess(false)
 
     try {
       const res = await fetch("http://localhost:8080/login", {
         method: "POST",
-        credentials: "include", // <-- viktigt, tar emot JWT-cookie
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       })
@@ -27,43 +28,68 @@ export default function Page() {
       }
 
       setSuccess(true)
-      // redirect typ dashboard
       window.location.href = "/dashboard"
 
     } catch (err) {
-      setError("Network error")
+      setError("Network error: backend unreachable")
     }
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-sm mx-auto p-6">
-      <h1 className="text-xl font-bold">Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm border border-slate-200">
+        <h1 className="text-3xl font-extrabold mb-6 text-slate-800 text-center">Welcome Back</h1>
 
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="border p-2 rounded"
-      />
+        <div className="flex flex-col gap-5">
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full border border-slate-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              placeholder="Enter your username"
+            />
+          </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 rounded"
-      />
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-slate-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              placeholder="••••••••"
+            />
+          </div>
 
-      <button
-        onClick={login}
-        className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
-      >
-        Login
-      </button>
+          <button
+            onClick={login}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+          >
+            Log In
+          </button>
 
-      {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">Logged in!</p>}
+          {error && (
+            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-200 text-center font-medium">
+              ⚠️ {error}
+            </div>
+          )}
+          
+          {success && (
+            <div className="p-3 bg-green-50 text-green-600 text-sm rounded-lg border border-green-200 text-center font-medium">
+              ✅ Login successful! Redirecting...
+            </div>
+          )}
+
+          <div className="text-center mt-2 text-sm text-slate-500">
+            Don't have an account?{" "}
+            <Link href="/register" className="text-blue-600 font-bold hover:underline">
+              Sign up
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
