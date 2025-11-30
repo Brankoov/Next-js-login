@@ -1,0 +1,9 @@
+# docker-compose.yml (i din Frontend-mapp)
+services:
+  frontend:
+    build: .
+    container_name: security-frontend
+    ports:
+      - "3000:3000"
+    # Eftersom koden körs i webbläsaren ("use client") kommer den 
+    # fortfarande nå backend på localhost:8080 från din dator.

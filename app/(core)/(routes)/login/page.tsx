@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/app/_components/button.component"
 import { useState } from "react"
 
 export default function Page() {
