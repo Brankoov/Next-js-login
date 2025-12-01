@@ -59,7 +59,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-slate-300 p-3 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-              placeholder="Strong password (Ex: Admin123!)"
+              placeholder="Strong password (Ex: Abcd123!)"
             />
             <p className="text-xs text-slate-400 mt-1 ml-1">Must contain Upper, Lower, Number & Symbol</p>
           </div>
